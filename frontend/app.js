@@ -64,7 +64,7 @@ async function runSystemAction(actionType, userPrompt) {
   const outputConsole = document.getElementById('main-console-output');
 
   if (!overlay || !card || !title || !body || !indicator) {
-    console.error('Telemetry overlay DOM elements missing from index.html');
+    console.error('Telemetry overlay elements missing in index.html');
     return;
   }
 
@@ -144,7 +144,7 @@ function closeTelemetryWindow() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initEvents() {
   const btnAnalysis = document.getElementById('btn-cinematic-analysis');
   const btnScript = document.getElementById('btn-script-orchestration');
   const btnRender = document.getElementById('btn-render-pipeline');
@@ -155,7 +155,36 @@ document.addEventListener('DOMContentLoaded', () => {
     btnAnalysis.addEventListener('click', () => {
       runSystemAction('cinematic-analysis', 'Execute high-contrast cinematic color lighting analysis for Scene 01.');
     });
-  }cat << 'EOF' > frontend/app.js
+  }
+
+  if (btnScript) {
+    btnScript.addEventListener('click', () => {
+      runSystemAction('script-orchestration', 'Synthesize agentic multi-character dialogue block for act 2 climax.');
+    });
+  }
+
+  if (btnRender) {
+    btnRender.addEventListener('click', () => {
+      runSystemAction('render-pipeline', 'Initiate monochrome render sequence specs for camera rig angle B.');
+    });
+  }
+
+  if (runBtn && agentInput) {
+    runBtn.addEventListener('click', () => {
+      const promptText = agentInput.value.trim();
+      if (promptText) {
+        runSystemAction('script-orchestration', promptText);
+      }
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEvents);
+} else {
+  initEvents();
+}
+EOFcat << 'EOF' > frontend/app.js
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:5000' 
   : '';
@@ -222,7 +251,7 @@ async function runSystemAction(actionType, userPrompt) {
   const outputConsole = document.getElementById('main-console-output');
 
   if (!overlay || !card || !title || !body || !indicator) {
-    console.error('Telemetry overlay DOM elements missing from index.html');
+    console.error('Telemetry overlay elements missing in index.html');
     return;
   }
 
@@ -302,7 +331,7 @@ function closeTelemetryWindow() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initEvents() {
   const btnAnalysis = document.getElementById('btn-cinematic-analysis');
   const btnScript = document.getElementById('btn-script-orchestration');
   const btnRender = document.getElementById('btn-render-pipeline');
@@ -335,4 +364,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEvents);
+} else {
+  initEvents();
+}
