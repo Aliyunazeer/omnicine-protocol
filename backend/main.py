@@ -55,8 +55,9 @@ async def run_agent(request: CommandRequest):
         import google.generativeai as genai
         api_key = os.getenv("GEMINI_API_KEY", "")
         genai.configure(api_key=api_key)
-        # Updated model alias to resolve endpoint 404
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        
+        # Use standard model name to resolve endpoint 404
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         prompt = f"Context: Telemetry={telemetry}, Analytics={analytics}. Task: {request.user_prompt}"
         response = model.generate_content(prompt)
