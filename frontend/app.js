@@ -1,4 +1,5 @@
-const API_BASE_URL = window.location.hostname === 'localhost' 
+// Explicitly point to local server when running locally
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
   ? 'http://localhost:5000' 
   : '';
 
@@ -164,6 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnRender) {
     btnRender.addEventListener('click', () => {
       runSystemAction('render-pipeline', 'Initiate monochrome render sequence specs for camera rig angle B.');
+    });
+  }
+});
+
+// Hook main Director Console Execute button
+document.addEventListener('DOMContentLoaded', () => {
+  const runBtn = document.getElementById('runBtn');
+  const agentInput = document.getElementById('agentPrompt');
+
+  if (runBtn && agentInput) {
+    runBtn.addEventListener('click', () => {
+      const promptText = agentInput.value.trim();
+      if (promptText) {
+        runSystemAction('script-orchestration', promptText);
+      }
     });
   }
 });
