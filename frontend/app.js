@@ -1,7 +1,7 @@
-// Explicitly point to local server when running locally
-const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
+// Use local server if testing on localhost, otherwise point directly to Render backend
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:5000' 
-  : '';
+  : 'https://omnicine-protocol.onrender.com';
 
 const ACTION_TEMPLATES = {
   'cinematic-analysis': {
@@ -149,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAnalysis = document.getElementById('btn-cinematic-analysis');
   const btnScript = document.getElementById('btn-script-orchestration');
   const btnRender = document.getElementById('btn-render-pipeline');
+  const runBtn = document.getElementById('runBtn');
+  const agentInput = document.getElementById('agentPrompt');
 
   if (btnAnalysis) {
     btnAnalysis.addEventListener('click', () => {
@@ -167,12 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
       runSystemAction('render-pipeline', 'Initiate monochrome render sequence specs for camera rig angle B.');
     });
   }
-});
-
-// Hook main Director Console Execute button
-document.addEventListener('DOMContentLoaded', () => {
-  const runBtn = document.getElementById('runBtn');
-  const agentInput = document.getElementById('agentPrompt');
 
   if (runBtn && agentInput) {
     runBtn.addEventListener('click', () => {
