@@ -73,7 +73,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen p-4 sm:p-6 md:p-10 custom-scrollbar">
+<body class="min-h-screen p-4 sm:p-6 md:p-10 custom-scrollbar relative">
 
   <div class="max-w-6xl mx-auto space-y-6">
     
@@ -108,33 +108,33 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <!-- Major Action 1 -->
-        <button onclick="runPreset('Inspect GPU telemetry, fix overheating, and re-balance render tasks across available nodes.')" 
+        <button id="btn-cinematic-analysis" 
           class="panel panel-interactive text-left p-4 bg-[#121316] hover:bg-[#18191d] transition">
           <div class="flex justify-between items-center mb-1.5">
-            <span class="font-medium text-xs text-zinc-100">Auto-Fix Bottlenecks</span>
-            <span class="text-[10px] text-zinc-500 font-mono">INFRASTRUCTURE</span>
+            <span class="font-medium text-xs text-zinc-100">Cinematic Analysis</span>
+            <span class="text-[10px] text-zinc-500 font-mono">VISION</span>
           </div>
-          <p class="text-xs text-zinc-400 leading-relaxed">Detect thermal anomalies, flush VRAM bottlenecks, and re-balance task assignments.</p>
+          <p class="text-xs text-zinc-400 leading-relaxed">Inspect color parade, REC.2020 grading curves, and frame density.</p>
         </button>
 
         <!-- Major Action 2 -->
-        <button onclick="runPreset('Analyze box-office market demand and optimize rendering priorities to maximize projected revenue yield.')" 
+        <button id="btn-script-orchestration" 
           class="panel panel-interactive text-left p-4 bg-[#121316] hover:bg-[#18191d] transition">
           <div class="flex justify-between items-center mb-1.5">
-            <span class="font-medium text-xs text-zinc-100">Maximize View Yield</span>
-            <span class="text-[10px] text-zinc-500 font-mono">STRATEGY</span>
+            <span class="font-medium text-xs text-zinc-100">Script Synthesis</span>
+            <span class="text-[10px] text-zinc-500 font-mono">AGENTIC</span>
           </div>
-          <p class="text-xs text-zinc-400 leading-relaxed">Cross-reference rendering profiles with real-time market yield metrics.</p>
+          <p class="text-xs text-zinc-400 leading-relaxed">Synthesize multi-character dialogue block and climax structure.</p>
         </button>
 
         <!-- Major Action 3 -->
-        <button onclick="runPreset('Clear GPU caches, throttle non-essential processes, and prepare system for clean 4K export.')" 
+        <button id="btn-render-pipeline" 
           class="panel panel-interactive text-left p-4 bg-[#121316] hover:bg-[#18191d] transition">
           <div class="flex justify-between items-center mb-1.5">
-            <span class="font-medium text-xs text-zinc-100">Safe Export Prep</span>
-            <span class="text-[10px] text-zinc-500 font-mono">STABILITY</span>
+            <span class="font-medium text-xs text-zinc-100">Render Pipeline</span>
+            <span class="text-[10px] text-zinc-500 font-mono">RAYTRACING</span>
           </div>
-          <p class="text-xs text-zinc-400 leading-relaxed">Purge temporary caches and verify node thermal stability prior to export.</p>
+          <p class="text-xs text-zinc-400 leading-relaxed">Initiate monochrome render sequence and monitor raytracing matrices.</p>
         </button>
       </div>
 
@@ -188,7 +188,7 @@
         <div class="flex items-center justify-between mb-2">
           <h3 class="text-[11px] uppercase tracking-wider text-zinc-500 font-mono">Agent Reasoning Log</h3>
         </div>
-        <div id="agentOutput" class="font-mono text-xs bg-[#0d0e11] p-4 rounded border border-[#222328] text-zinc-300 min-h-[140px] whitespace-pre-wrap leading-relaxed custom-scrollbar overflow-x-auto">Awaiting command execution...</div>
+        <div id="main-console-output" class="font-mono text-xs bg-[#0d0e11] p-4 rounded border border-[#222328] text-zinc-300 min-h-[140px] max-h-[400px] overflow-y-auto whitespace-pre-wrap leading-relaxed custom-scrollbar">Awaiting command execution...</div>
       </div>
     </section>
 
@@ -247,6 +247,33 @@
 
   </div>
 
+  <!-- SYSTEM ACTION MINI WINDOW TELEMETRY OVERLAY -->
+  <div id="telemetry-overlay" class="fixed bottom-6 right-6 z-50 hidden flex-col gap-3 max-w-sm w-full font-mono transition-all duration-300">
+    <div id="telemetry-card" class="bg-black/90 border border-neutral-800 rounded-lg p-4 shadow-2xl backdrop-blur-md text-xs text-neutral-300 relative overflow-hidden">
+      
+      <!-- Top Status Header -->
+      <div class="flex items-center justify-between border-b border-neutral-800 pb-2 mb-3">
+        <div class="flex items-center gap-2">
+          <span id="telemetry-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="telemetry-title" class="font-semibold tracking-wider text-neutral-100 uppercase">ACTION ACTIVE</span>
+        </div>
+        <button onclick="closeTelemetryWindow()" class="text-neutral-500 hover:text-neutral-200 transition-colors">✕</button>
+      </div>
+
+      <!-- Custom Visualizer Area per Action -->
+      <div id="telemetry-body" class="mb-3 min-h-[60px] flex items-center justify-center border border-neutral-800/50 rounded bg-neutral-950/50 p-2">
+        <!-- Dynamic mini-window graphics injected via app.js -->
+      </div>
+
+      <!-- Live Status Console Output -->
+      <div class="flex justify-between text-[10px] text-neutral-500">
+        <span>LATENCY: <span id="telemetry-ping" class="text-neutral-300">18ms</span></span>
+        <span>MODEL: <span class="text-neutral-300">GEMINI-3.6-FLASH</span></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
   <script>
     const API_BASE = "https://omnicine-protocol.onrender.com";
 
@@ -328,7 +355,7 @@
 
     async function runAgent() {
       const prompt = document.getElementById('agentPrompt').value;
-      const out = document.getElementById('agentOutput');
+      const out = document.getElementById('main-console-output');
       
       out.textContent = "Initializing Gemini Agent Engine...\nProcessing telemetry and analytics streams...";
 
