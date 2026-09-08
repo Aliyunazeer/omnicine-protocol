@@ -34,7 +34,7 @@ const handleOrchestration = (req, res) => {
   }, 1400);
 };
 
-// Catch every possible endpoint path
+// Handle all route variations
 app.all('/api/orchestrate', handleOrchestration);
 app.all('/orchestrate', handleOrchestration);
 app.all('/', (req, res) => {
