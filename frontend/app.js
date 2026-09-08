@@ -77,20 +77,20 @@ async function runSystemAction(actionType, userPrompt) {
     outputConsole.innerText = `[ORCHESTRATOR INIT] Executing ${actionType.toUpperCase()}...\n\n`;
   }
 
-  const endpoint = `${API_BASE_URL}/api/orchestrate`;
+  // Hit the base root URL directly where Express is listening
+  const endpoint = `${API_BASE_URL}/`;
 
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'text/event-stream'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ prompt: userPrompt, actionType })
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status} ${response.statusText} from ${endpoint}`);
+      throw new Error(`HTTP ${response.status} ${response.statusText}`);
     }
 
     const reader = response.body.getReader();
