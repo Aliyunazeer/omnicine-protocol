@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: omnicine-protocol
-    env: node
-    plan: free
-    buildCommand: npm install
-    startCommand: node backend/server.js
