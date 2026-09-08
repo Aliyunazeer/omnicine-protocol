@@ -1,12 +1,15 @@
 {
-  "dependencies": {
-    "@google/genai": "^2.21.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1"
-  },
+  "name": "omnicine-protocol",
+  "version": "1.0.0",
   "type": "module",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "build": "echo 'No build required for backend'"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
   }
 }

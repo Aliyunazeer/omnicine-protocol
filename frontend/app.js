@@ -1,6 +1,4 @@
-const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? 'http://localhost:5000' 
-  : 'https://omnicine-protocol.onrender.com';
+const API_BASE_URL = 'https://omnicine-protocol.onrender.com';
 
 const ACTION_TEMPLATES = {
   'cinematic-analysis': {
@@ -80,15 +78,17 @@ async function runSystemAction(actionType, userPrompt) {
   }
 
   try {
-    let response = await fetch(`${API_BASE_URL}/api/orchestrate`, {
+    let targetUrl = `${API_BASE_URL}/api/orchestrate`;
+    let response = await fetch(targetUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: userPrompt, actionType })
     });
 
     if (response.status === 404) {
-      // Fallback try without /api prefix if 404 occurs
-      response = await fetch(`${API_BASE_URL}/orchestrate`, {
+      console.warn('Primary path /api/orchestrate returned 404, falling back to /orchestrate');
+      targetUrl = `${API_BASE_URL}/orchestrate`;
+      response = await fetch(targetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: userPrompt, actionType })
@@ -96,7 +96,7 @@ async function runSystemAction(actionType, userPrompt) {
     }
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status} from ${targetUrl}`);
     }
 
     const reader = response.body.getReader();
