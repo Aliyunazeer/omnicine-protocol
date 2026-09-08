@@ -7,7 +7,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// Main SSE streaming endpoint
+// Root endpoint (the one working in your screenshot)
+app.get('/', (req, res) => {
+  res.json({ status: "Omnicine Core Active" });
+});
+
+// The missing route causing the 404
 app.post('/api/orchestrate', (req, res) => {
   const { prompt, actionType } = req.body || {};
 
@@ -33,11 +38,6 @@ app.post('/api/orchestrate', (req, res) => {
   }, 1400);
 });
 
-// Healthcheck
-app.get('/', (req, res) => {
-  res.status(200).send('OmniCine Backend Live');
-});
-
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
