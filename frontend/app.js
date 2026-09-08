@@ -77,29 +77,20 @@ async function runSystemAction(actionType, userPrompt) {
     outputConsole.innerText = `[ORCHESTRATOR INIT] Executing ${actionType.toUpperCase()}...\n\n`;
   }
 
-  const payload = JSON.stringify({ prompt: userPrompt, actionType });
-  const headers = { 'Content-Type': 'application/json' };
-  const endpoints = [
-    `${API_BASE_URL}/api/orchestrate`,
-    `${API_BASE_URL}/orchestrate`,
-    `${API_BASE_URL}/`
-  ];
-
-  let response = null;
-  let lastErr = null;
-
-  for (const url of endpoints) {
-    try {
-      response = await fetch(url, { method: 'POST', headers, body: payload });
-      if (response.ok) break;
-    } catch (e) {
-      lastErr = e;
-    }
-  }
+  const endpoint = `${API_BASE_URL}/api/orchestrate`;
 
   try {
-    if (!response || !response.ok) {
-      throw new Error(`HTTP error! status: ${response ? response.status : 'Fetch failed'}`);
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'text/event-stream'
+      },
+      body: JSON.stringify({ prompt: userPrompt, actionType })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} ${response.statusText} from ${endpoint}`);
     }
 
     const reader = response.body.getReader();

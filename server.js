@@ -5,19 +5,15 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS and explicitly allow POST and OPTIONS
+// Broad CORS middleware
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: '*',
+  allowedHeaders: '*'
 }));
-
-// Handle preflight requests for all routes
-app.options('*', cors());
 
 app.use(express.json());
 
-// Streaming orchestration handler
 const handleOrchestration = (req, res) => {
   const { prompt, actionType } = req.body || {};
 
@@ -44,15 +40,13 @@ const handleOrchestration = (req, res) => {
   }, 1400);
 };
 
-// Map POST and GET for all orchestrate routes
-app.post('/api/orchestrate', handleOrchestration);
-app.get('/api/orchestrate', (req, res) => res.status(200).send('API active (Send POST)'));
+// Bind all methods (POST, OPTIONS, GET, PUT) for orchestrate routes
+app.all('/api/orchestrate', handleOrchestration);
+app.all('/orchestrate', handleOrchestration);
 
-app.post('/orchestrate', handleOrchestration);
-app.get('/orchestrate', (req, res) => res.status(200).send('API active (Send POST)'));
-
-app.post('/', handleOrchestration);
-app.get('/', (req, res) => res.status(200).send('OmniCine Protocol Backend Core Online'));
+app.get('/', (req, res) => {
+  res.status(200).send('OmniCine Protocol Backend Core Online');
+});
 
 app.listen(PORT, () => {
   console.log(`[OMNICINE BACKEND] Server listening on port ${PORT}`);
