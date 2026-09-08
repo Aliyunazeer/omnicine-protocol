@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://omnicine-protocol.onrender.com';
+const API_BASE_URL = window.location.origin;
 
 const ACTION_TEMPLATES = {
   'cinematic-analysis': {
@@ -83,7 +83,7 @@ async function runSystemAction(actionType, userPrompt) {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ prompt: userPrompt, actionType })
     });
