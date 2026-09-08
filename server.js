@@ -5,21 +5,26 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Enable CORS and explicitly allow POST and OPTIONS
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Handle preflight requests for all routes
+app.options('*', cors());
+
 app.use(express.json());
 
-// Streaming orchestration core logic
-const handleOrchestration = async (req, res) => {
+// Streaming orchestration handler
+const handleOrchestration = (req, res) => {
   const { prompt, actionType } = req.body || {};
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   const initialMsg = JSON.stringify({ 
     text: `[SYSTEM OK] Received ${actionType || 'COMMAND'}: "${prompt || 'Default execution'}"\n\nInitializing core processing...\n` 
@@ -39,16 +44,16 @@ const handleOrchestration = async (req, res) => {
   }, 1400);
 };
 
-// Route handlers for POST requests across all endpoints
+// Map POST and GET for all orchestrate routes
 app.post('/api/orchestrate', handleOrchestration);
-app.post('/orchestrate', handleOrchestration);
-app.post('/', handleOrchestration);
+app.get('/api/orchestrate', (req, res) => res.status(200).send('API active (Send POST)'));
 
-// Health check endpoints
-app.get('/', (req, res) => {
-  res.status(200).send('OmniCine Protocol Backend Core Online');
-});
+app.post('/orchestrate', handleOrchestration);
+app.get('/orchestrate', (req, res) => res.status(200).send('API active (Send POST)'));
+
+app.post('/', handleOrchestration);
+app.get('/', (req, res) => res.status(200).send('OmniCine Protocol Backend Core Online'));
 
 app.listen(PORT, () => {
-  console.log(`[OMNICINE BACKEND] Server running on port ${PORT}`);
+  console.log(`[OMNICINE BACKEND] Server listening on port ${PORT}`);
 });
