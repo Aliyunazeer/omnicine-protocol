@@ -77,26 +77,29 @@ async function runSystemAction(actionType, userPrompt) {
     outputConsole.innerText = `[ORCHESTRATOR INIT] Executing ${actionType.toUpperCase()}...\n\n`;
   }
 
-  try {
-    let targetUrl = `${API_BASE_URL}/api/orchestrate`;
-    let response = await fetch(targetUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: userPrompt, actionType })
-    });
+  const payload = JSON.stringify({ prompt: userPrompt, actionType });
+  const headers = { 'Content-Type': 'application/json' };
+  const endpoints = [
+    `${API_BASE_URL}/api/orchestrate`,
+    `${API_BASE_URL}/orchestrate`,
+    `${API_BASE_URL}/`
+  ];
 
-    if (response.status === 404) {
-      console.warn('Primary path /api/orchestrate returned 404, falling back to /orchestrate');
-      targetUrl = `${API_BASE_URL}/orchestrate`;
-      response = await fetch(targetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: userPrompt, actionType })
-      });
+  let response = null;
+  let lastErr = null;
+
+  for (const url of endpoints) {
+    try {
+      response = await fetch(url, { method: 'POST', headers, body: payload });
+      if (response.ok) break;
+    } catch (e) {
+      lastErr = e;
     }
+  }
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status} from ${targetUrl}`);
+  try {
+    if (!response || !response.ok) {
+      throw new Error(`HTTP error! status: ${response ? response.status : 'Fetch failed'}`);
     }
 
     const reader = response.body.getReader();
@@ -126,9 +129,6 @@ async function runSystemAction(actionType, userPrompt) {
             if (parsed.text && outputConsole) {
               outputConsole.innerText += parsed.text;
               outputConsole.scrollTop = outputConsole.scrollHeight;
-            }
-            if (parsed.error && outputConsole) {
-              outputConsole.innerText += `\n[ERROR]: ${parsed.error}`;
             }
           } catch (e) {}
         }
