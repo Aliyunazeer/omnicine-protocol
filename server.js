@@ -34,7 +34,7 @@ const handleOrchestration = (req, res) => {
   }, 1400);
 };
 
-// Endpoints
+// Route matching for all potential endpoint targets
 app.all('/api/orchestrate', handleOrchestration);
 app.all('/orchestrate', handleOrchestration);
 
