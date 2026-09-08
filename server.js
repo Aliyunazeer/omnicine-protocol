@@ -5,13 +5,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Broad CORS middleware
-app.use(cors({
-  origin: '*',
-  methods: '*',
-  allowedHeaders: '*'
-}));
-
+app.use(cors({ origin: '*', methods: '*', allowedHeaders: '*' }));
 app.use(express.json());
 
 const handleOrchestration = (req, res) => {
@@ -40,11 +34,11 @@ const handleOrchestration = (req, res) => {
   }, 1400);
 };
 
-// Bind all methods (POST, OPTIONS, GET, PUT) for orchestrate routes
+// Catch every possible endpoint path
 app.all('/api/orchestrate', handleOrchestration);
 app.all('/orchestrate', handleOrchestration);
-
-app.get('/', (req, res) => {
+app.all('/', (req, res) => {
+  if (req.method === 'POST') return handleOrchestration(req, res);
   res.status(200).send('OmniCine Protocol Backend Core Online');
 });
 
