@@ -34,7 +34,7 @@ const handleOrchestration = (req, res) => {
   }, 1400);
 };
 
-// Handle all route variations
+// Map all variants directly
 app.all('/api/orchestrate', handleOrchestration);
 app.all('/orchestrate', handleOrchestration);
 app.all('/', (req, res) => {
@@ -43,5 +43,5 @@ app.all('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`[OMNICINE BACKEND] Server listening on port ${PORT}`);
+  console.log(`[OMNICINE BACKEND] Server running on port ${PORT}`);
 });
