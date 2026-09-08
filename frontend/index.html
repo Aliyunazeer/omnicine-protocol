@@ -5,13 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OmniCine Protocol</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes pulse-fast {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-    .animate-pulse-fast { animation: pulse-fast 0.8s infinite; }
-  </style>
 </head>
 <body class="bg-black text-gray-200 min-h-screen p-4 md:p-10 font-mono relative">
   
@@ -28,15 +21,15 @@
       </div>
     </header>
 
-    <!-- System Actions Grid -->
+    <!-- Primary System Actions -->
     <section class="border border-zinc-800 p-6 rounded-lg bg-zinc-950">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Active Execution Routines</h2>
-        <span class="text-xs text-zinc-600">Continuous background agents</span>
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Primary Execution Routines</h2>
+        <span class="text-xs text-zinc-600">High-priority pipelines</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Action 1: Cinematic Analysis -->
+        <!-- Cinematic Analysis -->
         <div class="border border-zinc-800 p-4 rounded bg-zinc-900/50 flex flex-col justify-between space-y-3">
           <div>
             <div class="flex justify-between items-center mb-2">
@@ -50,7 +43,7 @@
           </button>
         </div>
 
-        <!-- Action 2: Script Synthesis -->
+        <!-- Script Synthesis -->
         <div class="border border-zinc-800 p-4 rounded bg-zinc-900/50 flex flex-col justify-between space-y-3">
           <div>
             <div class="flex justify-between items-center mb-2">
@@ -64,7 +57,7 @@
           </button>
         </div>
 
-        <!-- Action 3: Render Pipeline -->
+        <!-- Render Pipeline -->
         <div class="border border-zinc-800 p-4 rounded bg-zinc-900/50 flex flex-col justify-between space-y-3">
           <div>
             <div class="flex justify-between items-center mb-2">
@@ -80,6 +73,72 @@
       </div>
     </section>
 
+    <!-- Secondary Micro Actions (The Lesser Actions) -->
+    <section class="border border-zinc-800 p-6 rounded-lg bg-zinc-950">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Auxiliary / Micro Routines</h2>
+        <span class="text-xs text-zinc-600">Background micro-tasks</span>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <!-- Lesser Action 1 -->
+        <div class="border border-zinc-800/80 p-3 rounded bg-zinc-900/30 flex flex-col justify-between space-y-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-semibold text-white">Frame Interp</span>
+              <span id="badge-frame-interp" class="text-[9px] text-zinc-500 border border-zinc-800 px-1 rounded">IDLE</span>
+            </div>
+            <p class="text-[11px] text-zinc-500">Optical flow vectoring & 60fps interpolation.</p>
+          </div>
+          <button id="btn-frame-interp" class="w-full py-1 text-[11px] bg-zinc-800 hover:bg-emerald-600 text-white rounded">
+            START
+          </button>
+        </div>
+
+        <!-- Lesser Action 2 -->
+        <div class="border border-zinc-800/80 p-3 rounded bg-zinc-900/30 flex flex-col justify-between space-y-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-semibold text-white">Spatial Audio</span>
+              <span id="badge-spatial-audio" class="text-[9px] text-zinc-500 border border-zinc-800 px-1 rounded">IDLE</span>
+            </div>
+            <p class="text-[11px] text-zinc-500">Binaural 3D acoustics & room bounce sync.</p>
+          </div>
+          <button id="btn-spatial-audio" class="w-full py-1 text-[11px] bg-zinc-800 hover:bg-emerald-600 text-white rounded">
+            START
+          </button>
+        </div>
+
+        <!-- Lesser Action 3 -->
+        <div class="border border-zinc-800/80 p-3 rounded bg-zinc-900/30 flex flex-col justify-between space-y-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-semibold text-white">Metadata Extractor</span>
+              <span id="badge-metadata-extract" class="text-[9px] text-zinc-500 border border-zinc-800 px-1 rounded">IDLE</span>
+            </div>
+            <p class="text-[11px] text-zinc-500">EXIF, lens geometry & focal length logging.</p>
+          </div>
+          <button id="btn-metadata-extract" class="w-full py-1 text-[11px] bg-zinc-800 hover:bg-emerald-600 text-white rounded">
+            START
+          </button>
+        </div>
+
+        <!-- Lesser Action 4 -->
+        <div class="border border-zinc-800/80 p-3 rounded bg-zinc-900/30 flex flex-col justify-between space-y-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs font-semibold text-white">Prompt Refiner</span>
+              <span id="badge-prompt-refiner" class="text-[9px] text-zinc-500 border border-zinc-800 px-1 rounded">IDLE</span>
+            </div>
+            <p class="text-[11px] text-zinc-500">Dynamic system prompt optimization.</p>
+          </div>
+          <button id="btn-prompt-refiner" class="w-full py-1 text-[11px] bg-zinc-800 hover:bg-emerald-600 text-white rounded">
+            START
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- Director Console -->
     <section class="border border-zinc-800 p-6 rounded-lg bg-zinc-950">
       <div class="flex justify-between items-center mb-4">
@@ -88,7 +147,7 @@
       </div>
 
       <div>
-        <pre id="main-console-output" class="p-4 border border-zinc-800 rounded bg-black text-xs text-emerald-500 font-mono h-40 overflow-y-auto leading-relaxed">[SYSTEM READY] No continuous routines active.</pre>
+        <pre id="main-console-output" class="p-4 border border-zinc-800 rounded bg-black text-xs text-emerald-500 font-mono h-40 overflow-y-auto leading-relaxed">[SYSTEM READY] No active routines.</pre>
       </div>
     </section>
   </div>
@@ -108,16 +167,16 @@
         </button>
       </div>
 
-      <!-- Action-Specific Visual Representations (Dynamic Charts) -->
-      <div id="visualizer-container" class="border border-zinc-900 bg-black p-3 rounded h-40 flex flex-col justify-center">
+      <!-- Action Visualizers -->
+      <div id="visualizer-container" class="border border-zinc-900 bg-black p-3 rounded h-36 flex flex-col justify-center">
         
-        <!-- 1. Cinematic Analysis Visualizer: Color Histogram Parade -->
+        <!-- Primary 1: Color Histogram -->
         <div id="viz-cinematic-analysis" class="space-y-2 hidden">
           <div class="text-[10px] text-zinc-500 uppercase flex justify-between">
             <span>REC.2020 Luma Parade</span>
             <span id="luma-val" class="text-emerald-400 font-bold">100%</span>
           </div>
-          <div class="grid grid-cols-12 gap-1 items-end h-24 pt-2">
+          <div class="grid grid-cols-12 gap-1 items-end h-20 pt-2">
             <div class="bg-red-500/80 rounded-t h-1/2 transition-all duration-300" id="bar-1"></div>
             <div class="bg-red-500/80 rounded-t h-3/4 transition-all duration-300" id="bar-2"></div>
             <div class="bg-emerald-500/80 rounded-t h-2/3 transition-all duration-300" id="bar-3"></div>
@@ -133,13 +192,13 @@
           </div>
         </div>
 
-        <!-- 2. Script Synthesis Visualizer: Node Graph Cadence -->
+        <!-- Primary 2: Script Cadence -->
         <div id="viz-script-orchestration" class="space-y-2 hidden">
           <div class="text-[10px] text-zinc-500 uppercase flex justify-between">
             <span>Agentic Dialogue Flow</span>
-            <span id="node-count" class="text-emerald-400 font-bold">Active Nodes: 4</span>
+            <span class="text-emerald-400 font-bold">Active Nodes</span>
           </div>
-          <div class="flex items-center justify-around h-24 border border-zinc-900 rounded p-2">
+          <div class="flex items-center justify-around h-20 border border-zinc-900 rounded p-2">
             <div id="node-1" class="w-8 h-8 rounded-full border-2 border-emerald-500 flex items-center justify-center text-[10px] text-emerald-400 font-bold bg-emerald-950/40">A1</div>
             <div class="w-6 h-[1px] bg-zinc-700"></div>
             <div id="node-2" class="w-8 h-8 rounded-full border-2 border-zinc-700 flex items-center justify-center text-[10px] text-zinc-400 font-bold bg-zinc-900">A2</div>
@@ -148,13 +207,13 @@
           </div>
         </div>
 
-        <!-- 3. Render Pipeline Visualizer: Raytracing Matrix Grid -->
+        <!-- Primary 3: Raytrace Matrix -->
         <div id="viz-render-pipeline" class="space-y-2 hidden">
           <div class="text-[10px] text-zinc-500 uppercase flex justify-between">
-            <span>Raytracing Matrix Nodes</span>
-            <span id="render-fps" class="text-emerald-400 font-bold">60.0 FPS</span>
+            <span>Raytracing Tile Dispatch</span>
+            <span class="text-emerald-400 font-bold">60 FPS</span>
           </div>
-          <div class="grid grid-cols-6 gap-1 h-24 p-1 border border-zinc-900 rounded" id="matrix-grid">
+          <div class="grid grid-cols-6 gap-1 h-20 p-1 border border-zinc-900 rounded" id="matrix-grid">
             <div class="bg-emerald-950 border border-emerald-500/50 rounded"></div>
             <div class="bg-zinc-900 border border-zinc-800 rounded"></div>
             <div class="bg-zinc-900 border border-zinc-800 rounded"></div>
@@ -170,13 +229,26 @@
           </div>
         </div>
 
+        <!-- Micro Visualizer: Motion Vector Wave -->
+        <div id="viz-auxiliary" class="space-y-2 hidden">
+          <div class="text-[10px] text-zinc-500 uppercase flex justify-between">
+            <span id="aux-label">Micro-Routine Telemetry</span>
+            <span id="aux-val" class="text-emerald-400 font-bold">ACTIVE</span>
+          </div>
+          <div class="h-20 border border-zinc-900 rounded p-3 flex items-center justify-center">
+            <div id="aux-meter" class="w-full bg-emerald-500/20 h-4 rounded-full overflow-hidden border border-emerald-500/50">
+              <div id="aux-bar" class="bg-emerald-500 h-full w-1/2 transition-all duration-300"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Action Log Stream Target -->
-      <pre id="telemetry-body" class="text-[10px] text-emerald-400 font-mono bg-black p-2.5 rounded h-24 overflow-y-auto border border-zinc-900 leading-relaxed"></pre>
+      <!-- Action Log Stream -->
+      <pre id="telemetry-body" class="text-[10px] text-emerald-400 font-mono bg-black p-2 rounded h-24 overflow-y-auto border border-zinc-900 leading-relaxed"></pre>
 
-      <div class="flex justify-between items-center pt-2 text-[10px] text-zinc-600 border-t border-zinc-900">
-        <span>STATUS: <strong id="action-status-label" class="text-emerald-400">STREAMING...</strong></span>
+      <div class="flex justify-between items-center pt-1 text-[10px] text-zinc-600 border-t border-zinc-900">
+        <span>STATUS: <strong class="text-emerald-400">STREAMING...</strong></span>
         <span>ENGINE: <strong class="text-zinc-400">PERPETUAL LOOP</strong></span>
       </div>
 
