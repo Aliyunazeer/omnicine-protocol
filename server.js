@@ -34,14 +34,14 @@ const handleOrchestration = (req, res) => {
   }, 1400);
 };
 
-// Map all variants directly
+// Endpoints
 app.all('/api/orchestrate', handleOrchestration);
 app.all('/orchestrate', handleOrchestration);
-app.all('/', (req, res) => {
-  if (req.method === 'POST') return handleOrchestration(req, res);
+
+app.get('/', (req, res) => {
   res.status(200).send('OmniCine Protocol Backend Core Online');
 });
 
 app.listen(PORT, () => {
-  console.log(`[OMNICINE BACKEND] Server running on port ${PORT}`);
+  console.log(`[OMNICINE BACKEND] Server listening on port ${PORT}`);
 });

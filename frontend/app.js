@@ -77,8 +77,7 @@ async function runSystemAction(actionType, userPrompt) {
     outputConsole.innerText = `[ORCHESTRATOR INIT] Executing ${actionType.toUpperCase()}...\n\n`;
   }
 
-  // Hit the base root URL directly where Express is listening
-  const endpoint = `${API_BASE_URL}/`;
+  const endpoint = `${API_BASE_URL}/api/orchestrate`;
 
   try {
     const response = await fetch(endpoint, {
