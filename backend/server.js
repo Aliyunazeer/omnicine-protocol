@@ -1,20 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: '*', methods: '*', allowedHeaders: '*' }));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-const handleOrchestration = (req, res) => {
+// Main SSE streaming endpoint
+app.post('/api/orchestrate', (req, res) => {
   const { prompt, actionType } = req.body || {};
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', '*');
 
   const initialMsg = JSON.stringify({ 
     text: `[SYSTEM OK] Received ${actionType || 'COMMAND'}: "${prompt || 'Default execution'}"\n\nInitializing core processing...\n` 
@@ -32,16 +31,13 @@ const handleOrchestration = (req, res) => {
     res.write('data: [DONE]\n\n');
     res.end();
   }, 1400);
-};
+});
 
-// Route matching for all potential endpoint targets
-app.all('/api/orchestrate', handleOrchestration);
-app.all('/orchestrate', handleOrchestration);
-
+// Healthcheck
 app.get('/', (req, res) => {
-  res.status(200).send('OmniCine Protocol Backend Core Online');
+  res.status(200).send('OmniCine Backend Live');
 });
 
 app.listen(PORT, () => {
-  console.log(`[OMNICINE BACKEND] Server listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
