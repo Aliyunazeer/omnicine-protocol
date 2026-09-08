@@ -63,10 +63,7 @@ async function runSystemAction(actionType, userPrompt) {
   const indicator = document.getElementById('telemetry-indicator');
   const outputConsole = document.getElementById('main-console-output');
 
-  if (!overlay || !card || !title || !body || !indicator) {
-    console.error('Telemetry overlay DOM elements missing from index.html');
-    return;
-  }
+  if (!overlay || !card || !title || !body || !indicator) return;
 
   const template = ACTION_TEMPLATES[actionType] || ACTION_TEMPLATES['script-orchestration'];
   
@@ -83,11 +80,20 @@ async function runSystemAction(actionType, userPrompt) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/orchestrate`, {
+    let response = await fetch(`${API_BASE_URL}/api/orchestrate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: userPrompt, actionType })
     });
+
+    if (response.status === 404) {
+      // Fallback try without /api prefix if 404 occurs
+      response = await fetch(`${API_BASE_URL}/orchestrate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userPrompt, actionType })
+      });
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

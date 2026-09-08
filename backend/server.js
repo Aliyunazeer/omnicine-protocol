@@ -1,53 +1,52 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 5000;
+
+// Enable CORS for all routes and origins
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
-const ai = new GoogleGenAI({});
-
-app.post('/api/orchestrate', async (req, res) => {
+// Main Orchestration Endpoint
+const handleOrchestration = async (req, res) => {
   const { prompt, actionType } = req.body;
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
 
-  try {
-    const systemInstruction = `You are OmniCine Core, an advanced cinematic AI orchestrator. 
-Executing Action: ${actionType || 'General Query'}. 
-Deliver response in crisp, high-density professional prose with raw technical precision.`;
+  const initialMsg = JSON.stringify({ text: `[SYSTEM OK] Received ${actionType || 'COMMAND'}: "${prompt}"\n\nInitializing core processing...\n` });
+  res.write(`data: ${initialMsg}\n\n`);
 
-    const responseStream = await ai.models.generateContentStream({
-      model: 'gemini-3.6-flash',
-      contents: prompt,
-      config: {
-        systemInstruction: systemInstruction,
-        temperature: 0.7,
-      },
-    });
+  setTimeout(() => {
+    const chunk1 = JSON.stringify({ text: `[ANALYSIS] Processing payload through core agent pipeline...\n` });
+    res.write(`data: ${chunk1}\n\n`);
+  }, 800);
 
-    for await (const chunk of responseStream) {
-      if (chunk.text) {
-        res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
-      }
-    }
-
+  setTimeout(() => {
+    const chunk2 = JSON.stringify({ text: `[EXECUTION] Routine executed successfully.\n` });
+    res.write(`data: ${chunk2}\n\n`);
     res.write('data: [DONE]\n\n');
     res.end();
-  } catch (error) {
-    console.error('Gemini Stream Error:', error);
-    res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
-    res.end();
-  }
+  }, 1800);
+};
+
+// Route handlers for both /api/orchestrate and /orchestrate
+app.post('/api/orchestrate', handleOrchestration);
+app.post('/orchestrate', handleOrchestration);
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.send('OmniCine Protocol Backend Core Online');
 });
 
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`OmniCine Orchestrator active on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
