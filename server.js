@@ -1,13 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS for Vercel origin and preflight OPTIONS
+// Enable CORS for all origins and headers
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
@@ -16,7 +14,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// Main Orchestration Handler
+// Streaming orchestration endpoint
 const handleOrchestration = async (req, res) => {
   const { prompt, actionType } = req.body || {};
 
@@ -25,7 +23,7 @@ const handleOrchestration = async (req, res) => {
   res.setHeader('Connection', 'keep-alive');
 
   const initialMsg = JSON.stringify({ 
-    text: `[SYSTEM OK] Received ${actionType || 'COMMAND'}: "${prompt || 'Default execution'}"\n\nInitializing core processing...\n` 
+    text: `[SYSTEM OK] Received ${actionType || 'COMMAND'}: "${prompt || 'Default command'}"\n\nInitializing core processing...\n` 
   });
   res.write(`data: ${initialMsg}\n\n`);
 
@@ -42,19 +40,14 @@ const handleOrchestration = async (req, res) => {
   }, 1400);
 };
 
-// Route handlers covering all possible call paths
+// Bind routes
 app.post('/api/orchestrate', handleOrchestration);
 app.post('/orchestrate', handleOrchestration);
 
-// Health check endpoint
 app.get('/', (req, res) => {
   res.status(200).send('OmniCine Protocol Backend Core Online');
 });
 
-app.get('/api/orchestrate', (req, res) => {
-  res.status(200).send('API Orchestrate endpoint active (POST required)');
-});
-
 app.listen(PORT, () => {
-  console.log(`[OMNICINE BACKEND] Server listening on port ${PORT}`);
+  console.log(`[OMNICINE BACKEND] Server running on port ${PORT}`);
 });
